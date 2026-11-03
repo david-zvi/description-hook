@@ -14,7 +14,27 @@ A Claude Code plugin that makes Claude, **including subagents**, give every shel
 
 Needs Python 3 on your PATH, as `python3` or `python`.
 
-On Windows, the hook commands need Git Bash, which Claude Code uses for hooks when it's installed. Claude Code Desktop: install from **+ → Add plugins**. Plugins don't load in Desktop's WSL or cloud sessions; inside WSL, run the CLI and install there instead.
+Claude Code Desktop: first add the marketplace, with `/plugin marketplace add david-zvi/description-hook` in a CLI session or `claude plugin marketplace add david-zvi/description-hook` in a terminal. Then in Desktop click **+** next to the prompt box → **Add plugins** (if the menu shows **Plugins**, choose **Plugins → Browse plugins**). Plugins don't load in Desktop's WSL or cloud sessions; inside WSL, run the CLI and install there instead.
+
+### Codex
+
+```
+codex plugin marketplace add david-zvi/description-hook
+codex plugin add description-hook@description-hook
+```
+
+Codex desktop app: add the marketplace with the first command above, then open the **Plugins** tab, find description-hook, click **+**, and start a new chat.
+
+Codex skips plugin hooks until you trust them: open `/hooks` in the CLI, or **Settings > Hooks** in the app. Do this again after every plugin update.
+
+Codex's shell tool has no description field, so the description goes in the command itself, as a first-line comment:
+
+```
+# Deletes the build folder so the next build starts clean
+rm -rf build
+```
+
+A leading comment may stop your saved "always allow" rules from matching a command, so Codex could ask you to approve commands you've allowed before. This hasn't been tested yet.
 
 ## Why not file edits?
 

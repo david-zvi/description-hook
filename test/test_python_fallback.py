@@ -1,10 +1,12 @@
 import json
 import os
+import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
 
-from hook_runner import COMMANDS, run
+from hook_runner import COMMANDS, POWERSHELLS, run
 
 
 class PythonFallbackTest(unittest.TestCase):
@@ -35,7 +37,7 @@ exit 1
             with self.subTest(event=event_name):
                 event = {"hook_event_name": event_name, "tool_name": "Bash", "tool_input": {"command": "ls"}}
 
-                python_output = run(event, path=self.path_where_python3_is_broken)
+                python_output = run(event, "hooks.json", path=self.path_where_python3_is_broken)
 
                 self.assertTrue(os.path.exists(self.python3_input_file), "the broken python3 never ran")
                 with open(self.python3_input_file) as f:
@@ -43,6 +45,47 @@ exit 1
                 os.remove(self.python3_input_file)  # so the next event starts without this file
                 self.assertEqual(python3_input, event, "the broken python3 didn't read the whole input")
                 self.assertIsNotNone(python_output, "the fallback python printed nothing")
+
+
+class PowerShellPythonFallbackTest(unittest.TestCase):
+    """The PowerShell hook runs `py -3` if the py launcher exists, otherwise `python`."""
+
+    def test_python_runs_when_py_is_missing(self):
+        python_folder = os.path.dirname(sys.executable)
+        if not POWERSHELLS:
+            self.skipTest("no PowerShell installed")
+        if not shutil.which("python", path=python_folder):
+            self.skipTest(f"no `python` in {python_folder}")
+        if shutil.which("py", path=python_folder):
+            self.skipTest(f"`py` is in {python_folder}, so it can't be hidden")
+
+        event = {"hook_event_name": "PreToolUse", "tool_name": "PowerShell", "tool_input": {"command": "ls"}}
+        for powershell in POWERSHELLS:
+            with self.subTest(powershell=powershell):
+                # With only Python's own folder on PATH, `py` isn't found and the hook falls back to `python`.
+                out = run(event, "hooks.json", path=python_folder, powershell=powershell)
+                self.assertEqual(out and out["permissionDecision"], "deny")
+
+
+class PythonMissingTest(unittest.TestCase):
+    """When no Python runs, each hook fails with a note telling the user how to get unstuck."""
+
+    def check_hook_fails_with_note(self, tool_name, powershell=None):
+        event = {"hook_event_name": "PreToolUse", "tool_name": tool_name, "tool_input": {"command": "ls"}}
+        with tempfile.TemporaryDirectory() as empty_folder:
+            with self.assertRaises(subprocess.CalledProcessError) as failure:
+                run(event, "hooks.json", path=empty_folder, powershell=powershell)
+        self.assertIn("disable the plugin with /plugin", failure.exception.stderr)
+
+    def test_bash_hook(self):
+        self.check_hook_fails_with_note("Bash")
+
+    def test_powershell_hook(self):
+        if not POWERSHELLS:
+            self.skipTest("no PowerShell installed")
+        for powershell in POWERSHELLS:
+            with self.subTest(powershell=powershell):
+                self.check_hook_fails_with_note("PowerShell", powershell)
 
 
 if __name__ == "__main__":

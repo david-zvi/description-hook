@@ -1,6 +1,6 @@
 {
   "name": "description-hook",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Claude and its subagents give every Bash and PowerShell command a plain-language description",
   "author": { "name": "davidzvi" },
   "license": "MIT"

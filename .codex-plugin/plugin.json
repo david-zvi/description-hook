@@ -1,0 +1,8 @@
+{
+  "name": "description-hook",
+  "version": "1.2.0",
+  "description": "Codex and its subagents give every shell command a plain-language description",
+  "author": { "name": "davidzvi" },
+  "license": "MIT",
+  "hooks": "./hooks/codex-hooks.json"
+}

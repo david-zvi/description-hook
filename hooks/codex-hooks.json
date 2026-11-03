@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [{ "type": "command", "command": "python3 \"${PLUGIN_ROOT}/hooks/inject_rules.py\" --codex", "commandWindows": "py -3 \"${PLUGIN_ROOT}\\hooks\\inject_rules.py\" --codex || python \"${PLUGIN_ROOT}\\hooks\\inject_rules.py\" --codex" }] }
+    ],
+    "SubagentStart": [
+      { "hooks": [{ "type": "command", "command": "python3 \"${PLUGIN_ROOT}/hooks/inject_rules.py\" --codex", "commandWindows": "py -3 \"${PLUGIN_ROOT}\\hooks\\inject_rules.py\" --codex || python \"${PLUGIN_ROOT}\\hooks\\inject_rules.py\" --codex" }] }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "command": "python3 \"${PLUGIN_ROOT}/hooks/require_description.py\" --codex", "commandWindows": "py -3 \"${PLUGIN_ROOT}\\hooks\\require_description.py\" --codex || python \"${PLUGIN_ROOT}\\hooks\\require_description.py\" --codex" }]
+      }
+    ]
+  }
+}

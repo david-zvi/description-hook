@@ -8,8 +8,12 @@
     ],
     "PreToolUse": [
       {
-        "matcher": "Bash|PowerShell",
-        "hooks": [{ "type": "command", "command": "in=$(cat); printf '%s' \"$in\" | python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/require_description.py || printf '%s' \"$in\" | python \"${CLAUDE_PLUGIN_ROOT}\"/hooks/require_description.py" }]
+        "matcher": "Bash",
+        "hooks": [{ "type": "command", "onFailure": "block", "command": "in=$(cat); printf '%s' \"$in\" | python3 \"${CLAUDE_PLUGIN_ROOT}\"/hooks/require_description.py || printf '%s' \"$in\" | python \"${CLAUDE_PLUGIN_ROOT}\"/hooks/require_description.py || (echo 'description-hook is broken, probably because Python is not installed. If this keeps happening, disable the plugin with /plugin.' >&2; exit 1)" }]
+      },
+      {
+        "matcher": "PowerShell",
+        "hooks": [{ "type": "command", "shell": "powershell", "onFailure": "block", "command": "if (Get-Command py -ErrorAction SilentlyContinue) { & py -3 \"${CLAUDE_PLUGIN_ROOT}/hooks/require_description.py\" } else { & python \"${CLAUDE_PLUGIN_ROOT}/hooks/require_description.py\" }; if (-not $?) { [Console]::Error.WriteLine('description-hook is broken, probably because Python is not installed. If this keeps happening, disable the plugin with /plugin.'); exit 1 }" }]
       }
     ]
   }
