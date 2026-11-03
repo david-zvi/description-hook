@@ -3,8 +3,8 @@
 import json
 import sys
 
-NO_DESCRIPTION = ("Blocked: this {} call's `description` is missing, empty, or not text. Retry with a "
-                  "one-sentence, plain-language description of what the command does and why.")
+NO_DESCRIPTION = "Blocked: this {} call's `description` is missing, empty, or not text. Retry with a " \
+                 "one-sentence, plain-language description of what the command does and why."
 
 
 def main():
