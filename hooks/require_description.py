@@ -9,8 +9,9 @@ NO_DESCRIPTION = ("Blocked: this Bash call has no `description`. Retry with a on
 
 def main():
     e = json.load(sys.stdin)
-    if not str((e.get("tool_input") or {}).get("description") or "").strip():
-        print(json.dumps({"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny",
+    description = e.get("tool_input", {}).get("description", "")
+    if not isinstance(description, str) or not description.strip():
+        print(json.dumps({"hookSpecificOutput": {"hookEventName": e["hook_event_name"], "permissionDecision": "deny",
                                                  "permissionDecisionReason": NO_DESCRIPTION}}))
 
 
