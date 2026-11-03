@@ -1,0 +1,12 @@
+{
+  "name": "description-hook",
+  "owner": { "name": "davidzvi" },
+  "description": "Plain-language descriptions for every shell command Claude runs",
+  "plugins": [
+    {
+      "name": "description-hook",
+      "source": "./",
+      "description": "Claude and its subagents give every shell command a plain-language description"
+    }
+  ]
+}

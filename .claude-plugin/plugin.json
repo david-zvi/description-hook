@@ -1,0 +1,7 @@
+{
+  "name": "description-hook",
+  "version": "1.0.0",
+  "description": "Claude and its subagents give every shell command a plain-language description",
+  "author": { "name": "davidzvi" },
+  "license": "MIT"
+}
