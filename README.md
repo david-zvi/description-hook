@@ -2,7 +2,7 @@
 
 A Claude Code plugin that makes Claude, **including subagents**, give every shell command a one-sentence, plain-language description ("Deletes the build folder so the next build starts clean"). Claude Code shows that description in the permission prompt, so you know what you're approving without reading shell syntax.
 
-- Bash calls without a description are sent back to Claude to add one.
+- Bash and PowerShell calls without a description are sent back to Claude to add one.
 - The rule is injected into the main session and into every subagent, so you don't need it in your `CLAUDE.md`.
 
 ## Install

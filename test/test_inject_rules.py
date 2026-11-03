@@ -9,7 +9,7 @@ class InjectRulesTest(unittest.TestCase):
             with self.subTest(event=event):
                 out = run({"hook_event_name": event})
                 self.assertEqual(out["hookEventName"], event)
-                self.assertIn("Every Bash tool call must have a `description`", out["additionalContext"])
+                self.assertIn("Every Bash and PowerShell tool call must have a `description`", out["additionalContext"])
 
 
 if __name__ == "__main__":
